@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model bautizos {
+  id               Int      @id @default(autoincrement())
+  feligres_id      Int      @unique(map: "unique_bautizado")
+  padre_id         Int?
+  madre_id         Int?
+  padrino_id       Int?
+  madrina_id       Int?
+  fecha_bautizo    DateTime @db.Date
+  parroquia_id     Int
+  sacerdote_id     Int
+  numero_libro     String   @db.VarChar(50)
+  pagina_libro     String   @db.VarChar(50)
+  seccion_libro    String   @db.VarChar(50)
+  notas_marginales String?  @db.Text
+  activo           Boolean? @default(true)
+}
+
+model confirmaciones {
+  id                 Int      @id @default(autoincrement())
+  feligres_id        Int
+  padrino_id         Int?
+  madrina_id         Int?
+  fecha_confirmacion DateTime @db.Date
+  parroquia_id       Int
+  sacerdote_id       Int
+  numero_libro       String   @db.VarChar(50)
+  pagina_libro       String   @db.VarChar(50)
+  seccion_libro      String   @db.VarChar(50)
+  notas_marginales   String?  @db.Text
+  activo             Boolean? @default(true)
+}
+
+model feligreses {
+  id                  Int               @id @default(autoincrement())
+  nombres             String            @db.VarChar(100)
+  apellido_paterno    String            @db.VarChar(100)
+  apellido_materno    String?           @db.VarChar(100)
+  genero              feligreses_genero @default(Masculino)
+  documento_identidad String?           @db.VarChar(20)
+  fecha_nacimiento    DateTime?         @db.Date
+  telefono            String?           @db.VarChar(20)
+  direccion           String?           @db.VarChar(255)
+  ciudad_id           Int?
+  activo              Boolean?          @default(true)
+}
+
+model matrimonios {
+  id               Int      @id @default(autoincrement())
+  novio_id         Int
+  novia_id         Int
+  testigo1_id      Int
+  testigo2_id      Int
+  padrino_1_id     Int?
+  padrino_2_id     Int?
+  padrino_3_id     Int?
+  padrino_4_id     Int?
+  fecha_matrimonio DateTime @db.Date
+  parroquia_id     Int
+  sacerdote_id     Int
+  numero_libro     String   @db.VarChar(50)
+  pagina_libro     String   @db.VarChar(50)
+  seccion_libro    String   @db.VarChar(50)
+  notas_marginales String?  @db.Text
+  activo           Boolean? @default(true)
+}
+
+model permisos {
+  id             Int    @id @default(autoincrement())
+  clave          String @unique(map: "clave") @db.VarChar(100)
+  nombre_visible String @db.VarChar(150)
+}
+
+model roles {
+  id               Int      @id @default(autoincrement())
+  nombre           String   @db.VarChar(50)
+  descripcion      String?  @db.VarChar(255)
+  activo           Boolean? @default(true)
+  nivel_jerarquico Int?     @default(3)
+}
+
+model usuarios {
+  id              Int      @id @default(autoincrement())
+  username        String   @db.VarChar(50)
+  password        String   @db.VarChar(255)
+  nombre_completo String   @db.VarChar(150)
+  rol_id          Int
+  parroquia_id    Int?
+  activo          Boolean? @default(true)
+}
+
+enum feligreses_genero {
+  Masculino
+  Femenino
+}
